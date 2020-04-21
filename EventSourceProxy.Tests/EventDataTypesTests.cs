@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace EventSourceProxy.Tests
@@ -32,10 +29,10 @@ namespace EventSourceProxy.Tests
 				{
 					listener.EnableEvents(testLog, EventLevel.LogAlways);
 
-					ITypeLog<T> tLog = (ITypeLog<T>)testLog;
+					var tLog = (ITypeLog<T>)testLog;
 					tLog.Log(t);
 
-					object value = listener.Events.Last().Payload[0];
+					var value = listener.Events.Last().Payload[0];
 					if (TypeIsSupportedByEventSource(typeof(T)))
 						Assert.AreEqual(t, value);
 					else

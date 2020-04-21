@@ -46,7 +46,7 @@ namespace EventSourceProxy.Tests
 			EventSourceImplementer.RegisterProvider<ILog>(contextProvider);
 
 			var testLog = EventSourceImplementer.GetEventSourceAs<ILog>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			testLog.DoSomething();
 
@@ -54,7 +54,7 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual("DoSomething", contextProvider.Method);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual("context", events[0].Payload[0]);
 		}
@@ -72,7 +72,7 @@ namespace EventSourceProxy.Tests
 			Assert.IsNull(contextProvider.Method);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(0, events.Length);
 		}
 		
@@ -120,12 +120,12 @@ namespace EventSourceProxy.Tests
 		public void ProviderCanBeSpecifiedByAttribute()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<ILogWithProviderAttribute>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			testLog.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual("context", events[0].Payload[0]);
 		}
@@ -134,12 +134,12 @@ namespace EventSourceProxy.Tests
 		public void ContextCanBeControlledByClassAttribute()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<ILogWithAttributeDisabled>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			testLog.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(0, events[0].Payload.Count);
 		}
@@ -148,12 +148,12 @@ namespace EventSourceProxy.Tests
 		public void ContextCanBeControlledByMethodAttribute()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<ILogWithAttributeDisabledAndMethodEnabled>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			testLog.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(1, events[0].Payload.Count);
 		}
@@ -190,7 +190,7 @@ namespace EventSourceProxy.Tests
 			}
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(4, events[0].Payload.Count);
 			Assert.AreEqual("message", events[0].Payload[0]);

@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// The base class for a TraceContextProvider. TraceContextProvider properly determines whether

@@ -3,36 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy", "EventSourceProxy\EventSourceProxy.csproj", "{40DABAAD-795A-4420-982F-08BE1978FE02}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.Tests", "EventSourceProxy.Tests\EventSourceProxy.Tests.csproj", "{33A95AA5-4F87-47CF-B37A-2023CE9E0400}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.Example", "EventSourceProxy.Example\EventSourceProxy.Example.csproj", "{581BDCB4-6413-4272-B85F-4D39F6C131B8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateProxyManifest", "GenerateProxyManifest\GenerateProxyManifest.csproj", "{A01CE647-4B33-43E0-8DD4-F45F732D4C77}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{773540B5-F7A1-4E68-8343-C738E2183769}"
 	ProjectSection(SolutionItems) = preProject
-		Build.bat = Build.bat
-		Build.ps1 = Build.ps1
-		Build.psake.ps1 = Build.psake.ps1
-		Building.txt = Building.txt
-		EventSourceProxy.NuGet.nuspec = EventSourceProxy.NuGet.nuspec
-		EventSourceProxy.nuspec = EventSourceProxy.nuspec
 		EventSourceProxy.snk = EventSourceProxy.snk
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.Tests.NuGet", "EventSourceProxy.Tests.NuGet\EventSourceProxy.Tests.NuGet.csproj", "{B151A261-B9A0-4EE1-A61C-C04FFE94C373}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy", "EventSourceProxy\EventSourceProxy.csproj", "{58323019-5DF4-47D3-9E2C-8425EA3E387D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.NuGet", "EventSourceProxy.NuGet\EventSourceProxy.NuGet.csproj", "{FDB8844B-BB34-45E6-BDE1-BA657663A868}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.Tests", "EventSourceProxy.Tests\EventSourceProxy.Tests.csproj", "{96A8D1D4-4F1A-4997-AD0F-46C1FB7CD09C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateProxyManifest.NuGet", "GenerateProxyManifest.NuGet\GenerateProxyManifest.NuGet.csproj", "{0BF86E34-2AFC-4620-A5C6-E084448347A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.NetCoreApp3_1.Example", "EventSourceProxy.NetCoreApp3_1.Example\EventSourceProxy.NetCoreApp3_1.Example.csproj", "{B5C6BBFD-727E-4AD9-8730-4CBCF321EBD0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8B12C354-4911-40CA-A1F2-EA69182942F9}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourceProxy.Net472.Example", "EventSourceProxy.Net472.Example\EventSourceProxy.Net472.Example.csproj", "{1E4BF3ED-4139-435D-823E-3AD9A960916A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,34 +23,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{40DABAAD-795A-4420-982F-08BE1978FE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40DABAAD-795A-4420-982F-08BE1978FE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40DABAAD-795A-4420-982F-08BE1978FE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40DABAAD-795A-4420-982F-08BE1978FE02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33A95AA5-4F87-47CF-B37A-2023CE9E0400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33A95AA5-4F87-47CF-B37A-2023CE9E0400}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33A95AA5-4F87-47CF-B37A-2023CE9E0400}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33A95AA5-4F87-47CF-B37A-2023CE9E0400}.Release|Any CPU.Build.0 = Release|Any CPU
-		{581BDCB4-6413-4272-B85F-4D39F6C131B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{581BDCB4-6413-4272-B85F-4D39F6C131B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{581BDCB4-6413-4272-B85F-4D39F6C131B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{581BDCB4-6413-4272-B85F-4D39F6C131B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A01CE647-4B33-43E0-8DD4-F45F732D4C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A01CE647-4B33-43E0-8DD4-F45F732D4C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A01CE647-4B33-43E0-8DD4-F45F732D4C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A01CE647-4B33-43E0-8DD4-F45F732D4C77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B151A261-B9A0-4EE1-A61C-C04FFE94C373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B151A261-B9A0-4EE1-A61C-C04FFE94C373}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B151A261-B9A0-4EE1-A61C-C04FFE94C373}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B151A261-B9A0-4EE1-A61C-C04FFE94C373}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDB8844B-BB34-45E6-BDE1-BA657663A868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDB8844B-BB34-45E6-BDE1-BA657663A868}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDB8844B-BB34-45E6-BDE1-BA657663A868}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDB8844B-BB34-45E6-BDE1-BA657663A868}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BF86E34-2AFC-4620-A5C6-E084448347A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BF86E34-2AFC-4620-A5C6-E084448347A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BF86E34-2AFC-4620-A5C6-E084448347A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BF86E34-2AFC-4620-A5C6-E084448347A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58323019-5DF4-47D3-9E2C-8425EA3E387D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58323019-5DF4-47D3-9E2C-8425EA3E387D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58323019-5DF4-47D3-9E2C-8425EA3E387D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58323019-5DF4-47D3-9E2C-8425EA3E387D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A8D1D4-4F1A-4997-AD0F-46C1FB7CD09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A8D1D4-4F1A-4997-AD0F-46C1FB7CD09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A8D1D4-4F1A-4997-AD0F-46C1FB7CD09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A8D1D4-4F1A-4997-AD0F-46C1FB7CD09C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C6BBFD-727E-4AD9-8730-4CBCF321EBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C6BBFD-727E-4AD9-8730-4CBCF321EBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C6BBFD-727E-4AD9-8730-4CBCF321EBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C6BBFD-727E-4AD9-8730-4CBCF321EBD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E4BF3ED-4139-435D-823E-3AD9A960916A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E4BF3ED-4139-435D-823E-3AD9A960916A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E4BF3ED-4139-435D-823E-3AD9A960916A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E4BF3ED-4139-435D-823E-3AD9A960916A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

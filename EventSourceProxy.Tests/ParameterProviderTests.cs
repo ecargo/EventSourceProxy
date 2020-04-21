@@ -31,7 +31,7 @@ namespace EventSourceProxy.Tests
 			testLog.TraceAsData("p1", "p2");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(1, events[0].Payload.Count);
 			Assert.AreEqual("{\"p1\":\"p1\",\"p2\":\"p2\"}", events[0].Payload[0].ToString());
@@ -47,7 +47,7 @@ namespace EventSourceProxy.Tests
 			testLog.TraceSomeParameters("p", "p1", "p2");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(2, events[0].Payload.Count);
 			Assert.AreEqual("p", events[0].Payload[0].ToString());
@@ -141,7 +141,7 @@ namespace EventSourceProxy.Tests
 		private void VerifyEvents()
 		{
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(4, events.Length);
 
 			Assert.AreEqual(1, events[0].Payload.Count);
@@ -170,7 +170,7 @@ namespace EventSourceProxy.Tests
 			testLog.TraceAsData("p1", "p2");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(1, events[0].Payload.Count);
 			Assert.AreEqual("{\"p1\":\"p1\",\"p2\":\"p2\"}", events[0].Payload[0].ToString());
@@ -207,7 +207,7 @@ namespace EventSourceProxy.Tests
 			log.TraceAsData("p1", "p2");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(1, events[0].Payload.Count);
 			Assert.AreEqual("{\"p2\":\"p2\",\"p1\":\"p1\"}", events[0].Payload[0].ToString());
@@ -242,7 +242,7 @@ namespace EventSourceProxy.Tests
 			log.TraceAsData("p1", "p2");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(0, events[0].Payload.Count);
 		}
@@ -264,7 +264,7 @@ namespace EventSourceProxy.Tests
 				log.TraceAsData("p1", "p2");
 
 				// look at the events
-				var events = _listener.Events.ToArray();
+				var events = Listener.Events.ToArray();
 				Assert.AreEqual(1, events.Length);
 				Assert.AreEqual(1, events[0].Payload.Count);
 				Assert.AreEqual("{\"p2\":\"p2\",\"p1\":\"p1\"}", events[0].Payload[0].ToString());
@@ -371,7 +371,7 @@ namespace EventSourceProxy.Tests
 			log.LogPayment(MerchantName: "A Merchant", CreditCard: "1234123412341234", Amount: 10);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(3, events[0].Payload.Count);
 			Assert.Contains("A Merchant", events[0].Payload);
@@ -431,7 +431,7 @@ namespace EventSourceProxy.Tests
 			log.LogChange(change, "ignore me");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(3, events[0].Payload.Count);
 			Assert.Contains(change.From, events[0].Payload);
@@ -450,7 +450,7 @@ namespace EventSourceProxy.Tests
 			log.LogChange(change);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(4, events[0].Payload.Count);
 			Assert.AreEqual(change.From, events[0].Payload[0].ToString());
@@ -517,15 +517,20 @@ namespace EventSourceProxy.Tests
 			}
 		}
 
-		[Test, ExpectedException(typeof(ArgumentException))]
+		[Test]
 		public void BadExpressionGeneratesMeaningfulException()
 		{
-			EnableLogging<ILogEmailChangesWithBadExpressionTPP>();
+			Action act = () =>
+			{
+				EnableLogging<ILogEmailChangesWithBadExpressionTPP>();
+				
+				// do some logging
+				var log = EventSourceImplementer.GetEventSourceAs<ILogEmailChangesWithBadExpressionTPP>();
+				var change = new EmailChange() { From = "me", To = "you", When = new DateTime(2010, 1, 1) };
+				log.LogChange(change);
+			};
 
-			// do some logging
-			var log = EventSourceImplementer.GetEventSourceAs<ILogEmailChangesWithBadExpressionTPP>();
-			var change = new EmailChange() { From = "me", To = "you", When = new DateTime(2010, 1, 1) };
-			log.LogChange(change);
+			Assert.That(act, Throws.TypeOf<ArgumentException>());
 		}
 		#endregion
 
@@ -567,7 +572,7 @@ namespace EventSourceProxy.Tests
 			log.DoSomething("message");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(2, events[0].Payload.Count);
 			Assert.AreEqual("message", events[0].Payload[0].ToString());
@@ -636,7 +641,7 @@ namespace EventSourceProxy.Tests
 			proxy.LogItServiceStatusEvent("it", RagStatus.Up);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(2, events[0].Payload.Count);
 			Assert.AreEqual("it", events[0].Payload[0]);

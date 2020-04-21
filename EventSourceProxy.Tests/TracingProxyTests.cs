@@ -69,7 +69,7 @@ namespace EventSourceProxy.Tests
 		{
 			// create a logger for the interface and listen on it
 			var logger = EventSourceImplementer.GetEventSource<ICalculator>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 
 			// create a calculator and a proxy
 			var proxy = TracingProxy.Create<ICalculator>(new Calculator());
@@ -87,7 +87,7 @@ namespace EventSourceProxy.Tests
 		{
 			// create a logger for the interface and listen on it
 			var logger = EventSourceImplementer.GetEventSource<ICalculator>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 
 			// create a calculator and a proxy
 			var proxy = TracingProxy.Create<ICalculator>(new VirtualCalculator());
@@ -104,7 +104,7 @@ namespace EventSourceProxy.Tests
 		public void TestLoggingProxyFromVirtualClassToVirtualClass()
 		{
 			var logger = EventSourceImplementer.GetEventSource<VirtualCalculatorWithoutInterface>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 
 			// create a calculator and a proxy
 			var proxy = TracingProxy.Create<VirtualCalculatorWithoutInterface>(new VirtualCalculatorWithoutInterface());
@@ -121,7 +121,7 @@ namespace EventSourceProxy.Tests
 		{
 			// create a logger for the interface and listen on it
 			var logger = EventSourceImplementer.GetEventSource<ICalculator>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 
 			// create a calculator and a proxy
 			var proxy = TracingProxy.Create<VirtualCalculatorWithoutInterface, ICalculator>(new VirtualCalculatorWithoutInterface());
@@ -139,7 +139,7 @@ namespace EventSourceProxy.Tests
 		{
 			// create a logger for the interface and listen on it
 			var logger = EventSourceImplementer.GetEventSource<ICalculatorWithCompleted>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 
 			// create a calculator and a proxy
 			var proxy = TracingProxy.Create<VirtualCalculator, ICalculatorWithCompleted>(new VirtualCalculator());
@@ -151,7 +151,7 @@ namespace EventSourceProxy.Tests
 			VerifyEvents(logger);
 
 			// check the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(4, events.Length);
 			var eventSource = events[0].EventSource;
 
@@ -185,7 +185,7 @@ namespace EventSourceProxy.Tests
 		private void VerifyEvents(object logger)
 		{
 			// check the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(4, events.Length);
 			var eventSource = events[0].EventSource;
 
@@ -365,7 +365,7 @@ namespace EventSourceProxy.Tests
 			// turn on logging
 			EventSourceImplementer.RegisterProvider<ITestServiceWithReferenceParameters>(new JsonObjectSerializer());
 			var log = EventSourceImplementer.GetEventSourceAs<ITestServiceWithReferenceParameters>();
-			_listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
 
 			// log a built-in type reference
 			value = 1;
@@ -392,7 +392,7 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual(data.Data + 1, resultData.Data);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(6, events.Length);
 
 			// check the individual events to make sure the data came back in the payload
@@ -423,7 +423,7 @@ namespace EventSourceProxy.Tests
 		{
 			// turn on logging
 			var log = EventSourceImplementer.GetEventSourceAs<ITestServiceWithGenericMethods>();
-			_listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
 
 			log.GetItem((int)1);
 			log.GetItem((string)"s");
@@ -436,7 +436,7 @@ namespace EventSourceProxy.Tests
 			log.Constrained<string>("y");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(9, events.Length);
 
 			// check the individual events to make sure the data came back in the payload
@@ -444,7 +444,7 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual(1, events[1].Payload.Count);
 
 			// create a proxy on the interface
-			_listener.Reset();
+			Listener.Reset();
 			var proxy = TracingProxy.Create<ITestServiceWithGenericMethods>(new TestServiceWithGenericMethods());
 			proxy.GetItem(1);
 			proxy.GetItem((string)"s");
@@ -456,7 +456,7 @@ namespace EventSourceProxy.Tests
 			proxy.GetItem3<string, string>("x");
 			proxy.Constrained<string>("y");
 
-			events = _listener.Events.ToArray();
+			events = Listener.Events.ToArray();
 			Assert.AreEqual(18, events.Length);
 
 			// check the individual events to make sure the data came back in the payload
@@ -483,25 +483,25 @@ namespace EventSourceProxy.Tests
 		{
 			// turn on logging
 			var log = EventSourceImplementer.GetEventSourceAs<ITestServiceWithGenericTaskMethods>();
-			_listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
 
 			Assert.AreEqual(null, log.GetNothing());
 			Assert.AreEqual(null, log.GetItem((int)1));
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the individual events to make sure the data came back in the payload
 			//Assert.AreEqual(1, events[0].Payload.Count);
 
 			// create a proxy on the interface
-			_listener.Reset();
+			Listener.Reset();
 			var proxy = TracingProxy.Create<ITestServiceWithGenericTaskMethods>(new TestServiceWithGenericTaskMethods());
 			proxy.GetNothing().Wait();
 			proxy.GetItem(1).Wait();
 
-			events = _listener.Events.ToArray();
+			events = Listener.Events.ToArray();
 			Assert.AreEqual(4, events.Length);
 
 			// check the individual events to make sure the data came back in the payload
@@ -520,7 +520,7 @@ namespace EventSourceProxy.Tests
 		public void DerivedInterfaceCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IDerivedCalculator>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			var proxy = TracingProxy.Create<IDerivedCalculator>(new Calculator());
 
@@ -555,7 +555,7 @@ namespace EventSourceProxy.Tests
 		{
 			EventSourceImplementer.RegisterProvider<IThrowExceptions>(new JsonObjectSerializer());
 			var logger = EventSourceImplementer.GetEventSourceAs<IThrowExceptions>();
-			_listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
 
 			var proxy = TracingProxy.Create<IThrowExceptions>(new ThrowExceptions());
 
@@ -563,7 +563,7 @@ namespace EventSourceProxy.Tests
 			Assert.Throws<ApplicationException>(() => proxy.DoThrow());
 
 			// check the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the individual events
@@ -585,7 +585,7 @@ namespace EventSourceProxy.Tests
 		{
 			EventSourceImplementer.RegisterProvider<IThrowExceptionsAsync>(new JsonObjectSerializer());
 			var logger = EventSourceImplementer.GetEventSourceAs<IThrowExceptionsAsync>();
-			_listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
 
 			var proxy = TracingProxy.Create<IThrowExceptionsAsync>(new ThrowExceptionsAsync());
 
@@ -593,7 +593,7 @@ namespace EventSourceProxy.Tests
 			Assert.Throws<AggregateException>(() => proxy.DoThrowAsync().Wait());
 
 			// check the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the individual events

@@ -81,7 +81,7 @@ namespace EventSourceProxy.Tests
 			proxy.Send(new EMail("from", "to", "subject", "body", new byte[][] { new byte[] { 1 } }), DateTime.Parse("1/1/2000"));
 
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();
@@ -497,7 +497,7 @@ namespace EventSourceProxy.Tests
 			proxy.Send(new EMail("from", "to", "subject", "body", new byte[][] { new byte[] { 1 } }), DateTime.Parse("1/1/2000"));
 
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();
@@ -518,7 +518,7 @@ namespace EventSourceProxy.Tests
 			proxy.Send(new EMail("from", "to", "subject", "body", new byte[][] { new byte[] { 1 } }), DateTime.Parse("1/1/2000"));
 
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();
@@ -538,7 +538,7 @@ namespace EventSourceProxy.Tests
 			proxy.Send(new EMail("from", "to", "subject", "body", new byte[][] { new byte[] { 1 } }), DateTime.Parse("1/1/2000"));
 
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();
@@ -557,7 +557,7 @@ namespace EventSourceProxy.Tests
 			proxy.Send(new EMail("from", "to", "subject", "body", new byte[][] { new byte[] { 1 } }), DateTime.Parse("1/1/2000"));
 
 			// look at the events again
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();
@@ -602,7 +602,7 @@ namespace EventSourceProxy.Tests
 			proxy.TraceException(new Exception("oops, world"));
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(2, events[0].Payload.Count);
 			Assert.That(events[0].Payload.Contains("oops, world"));
@@ -634,7 +634,7 @@ namespace EventSourceProxy.Tests
 			MyTestEventSource.Log.LogError(new Exception("oops, world"));
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(2, events[0].Payload.Count);
 			Assert.That(events[0].Payload.Contains("oops, world"));
@@ -660,7 +660,7 @@ namespace EventSourceProxy.Tests
 			proxy.ForLoopIteration(0);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			var payload = events[0].Payload.Select(o => o.ToString()).ToArray();

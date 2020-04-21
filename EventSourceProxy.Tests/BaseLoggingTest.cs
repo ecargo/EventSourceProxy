@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Diagnostics.Tracing;
 
 namespace EventSourceProxy.Tests
@@ -11,12 +6,12 @@ namespace EventSourceProxy.Tests
 	public class BaseLoggingTest
 	{
 		#region Setup and TearDown
-		internal TestEventListener _listener;
+		internal TestEventListener Listener;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_listener = new TestEventListener();
+			Listener = new TestEventListener();
 		}
 		#endregion
 
@@ -24,13 +19,13 @@ namespace EventSourceProxy.Tests
 		{
 			// create the logger and make sure it is serializing the parameters properly
 			var logger = EventSourceImplementer.GetEventSource<TLog>();
-			_listener.EnableEvents(logger, EventLevel.LogAlways);
+			Listener.EnableEvents(logger, EventLevel.LogAlways);
 		}
 
 		protected void EnableLogging(object proxy)
 		{
 			// create the logger and make sure it is serializing the parameters properly
-			_listener.EnableEvents((EventSource)proxy, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)proxy, EventLevel.LogAlways);
 		}
 	}
 }

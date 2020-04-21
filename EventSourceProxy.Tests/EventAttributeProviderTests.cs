@@ -34,21 +34,21 @@ namespace EventSourceProxy.Tests
 		public void AttributeShouldDetermineProvider()
 		{
 			var logger = EventSourceImplementer.GetEventSourceAs<ILogInterfaceWithAttribute>();
-			_listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
 
 			logger.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(EventLevel.Warning, events[0].Level);
 
-			_listener.Reset();
+			Listener.Reset();
 			var proxy = TracingProxy.Create<ILogInterfaceWithAttribute>(new LogInterfaceWithAttribute());
 			try { proxy.DoSomething(); }
 			catch { }
 
-			events = _listener.Events.ToArray();
+			events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 			Assert.AreEqual(EventLevel.Critical, events[1].Level);
 		}
@@ -83,21 +83,21 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual(EventLevel.Error, new EventAttributeProvider().ExceptionEventLevel);
 
 			var logger = EventSourceImplementer.GetEventSourceAs<ILogInterfaceWithExceptionAttribute>();
-			_listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
 
 			logger.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(EventLevel.Informational, events[0].Level);
 
-			_listener.Reset();
+			Listener.Reset();
 			var proxy = TracingProxy.Create<ILogInterfaceWithExceptionAttribute>(new LogInterfaceWithExceptionAttribute());
 			try { proxy.DoSomething(); }
 			catch { }
 
-			events = _listener.Events.ToArray();
+			events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 			Assert.AreEqual(EventLevel.Critical, events[1].Level);
 		}
@@ -108,21 +108,21 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual(EventLevel.Error, new EventAttributeProvider().ExceptionEventLevel);
 
 			var logger = EventSourceImplementer.GetEventSourceAs<ILogInterfaceWithExceptionMethodAttribute>();
-			_listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)logger, EventLevel.LogAlways);
 
 			logger.DoSomething();
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual(EventLevel.Informational, events[0].Level);
 
-			_listener.Reset();
+			Listener.Reset();
 			var proxy = TracingProxy.Create<ILogInterfaceWithExceptionMethodAttribute>(new LogInterfaceWithExceptionMethodAttribute());
 			try { proxy.DoSomething(); }
 			catch { }
 
-			events = _listener.Events.ToArray();
+			events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 			Assert.AreEqual(EventLevel.Critical, events[1].Level);
 		}

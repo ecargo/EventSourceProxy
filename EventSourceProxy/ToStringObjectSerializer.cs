@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-#if NUGET
-using Microsoft.Diagnostics.Tracing;
-#else
-using System.Diagnostics.Tracing;
-#endif
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Diagnostics.Tracing;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Serializes objects by calling ToString on them.

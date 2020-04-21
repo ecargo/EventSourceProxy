@@ -1,24 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-#if NUGET
-using Microsoft.Diagnostics.Tracing;
-#else
 using System.Diagnostics.Tracing;
-#endif
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Completes the implementation of an EventSource by generating a class from an interface or from an abstract class.

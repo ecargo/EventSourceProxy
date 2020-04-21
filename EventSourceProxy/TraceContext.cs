@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using EventSourceProxy.Utilities;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// A thread-static bag of data that can be dropped into any trace.
@@ -73,12 +69,12 @@ namespace EventSourceProxy
 		/// <returns>The new TraceContext that can be filled in.</returns>
 		public static TraceContext Begin()
 		{
-			var data = (TraceContext)CallContext.LogicalGetData(_slot);
+			var data = (TraceContext)AsyncLocalContext.GetData(_slot);
 			TraceContext context = null;
 			try
 			{
 				context = new TraceContext(data);
-				CallContext.LogicalSetData(_slot, context);
+				AsyncLocalContext.SetData(_slot, context);
 			}
 			catch
 			{
@@ -96,7 +92,7 @@ namespace EventSourceProxy
 		/// <returns>The value associated with the key, or null of the value was not set.</returns>
 		public static object GetValue(string key)
 		{
-			var data = (TraceContext)CallContext.LogicalGetData(_slot);
+			var data = (TraceContext)AsyncLocalContext.GetData(_slot);
 			if (data == null)
 				return null;
 
@@ -115,7 +111,7 @@ namespace EventSourceProxy
 		/// </summary>
 		private void End()
 		{
-			CallContext.LogicalSetData(_slot, _baseContext);
+			AsyncLocalContext.SetData(_slot, _baseContext);
 		}
 	}
 }

@@ -11,11 +11,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Helps emit attribute data to IL.
@@ -65,9 +61,6 @@ namespace EventSourceProxy
 				attribute.Opcode,
 				attribute.Task,
 				attribute.Version,
-#if NUGET
-				attribute.Channel
-#endif
 			};
 
 			CustomAttributeBuilder attributeBuilder = new CustomAttributeBuilder(

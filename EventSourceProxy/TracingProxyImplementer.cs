@@ -1,23 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NUGET
-using Microsoft.Diagnostics.Tracing;
-#else
 using System.Diagnostics.Tracing;
-#endif
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Generates a class that implements a TracingProxy.
@@ -135,7 +124,12 @@ namespace EventSourceProxy
 			// create a new assembly
 			AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 			an.Name = ProxyHelper.AssemblyName;
-			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+			#if NETSTANDARD2_1
+				AssemblyBuilder ab = AssemblyBuilder.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+			#else
+				AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+			#endif
+			
 			ModuleBuilder mb = ab.DefineDynamicModule(an.Name);
 
 			// create a type that implements the given interface

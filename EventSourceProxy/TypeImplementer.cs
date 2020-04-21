@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-#if NUGET
-using Microsoft.Diagnostics.Tracing;
-#else
 using System.Diagnostics.Tracing;
-#endif
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,11 +9,7 @@ using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Implements a given type as an EventSource.
@@ -213,7 +205,11 @@ namespace EventSourceProxy
 			// create a new assembly
 			AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 			an.Name = ProxyHelper.AssemblyName;
+#if NETSTANDARD2_1
+			AssemblyBuilder ab = AssemblyBuilder.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+#else
 			AssemblyBuilder ab = AppDomain.CurrentDomain.DefineDynamicAssembly(an, AssemblyBuilderAccess.Run);
+#endif
 			ModuleBuilder mb = ab.DefineDynamicModule(an.Name);
 
 			// create a type based on EventSource and call the default constructor

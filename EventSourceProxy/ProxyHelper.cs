@@ -1,23 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NUGET
-using Microsoft.Diagnostics.Tracing;
-#else
 using System.Diagnostics.Tracing;
-#endif
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Methods to help with building proxies.
@@ -214,7 +204,12 @@ namespace EventSourceProxy
 			if (converter != null)
 			{
 				MethodBuilder mb = typeBuilder.DefineMethod(Guid.NewGuid().ToString(), MethodAttributes.Static | MethodAttributes.Public, converter.ReturnType, converter.Parameters.Select(p => p.Type).ToArray());
+				
+#if NETSTANDARD2_1
+				// TODO: Fix this mess.
+#else
 				converter.CompileToMethod(mb);
+#endif
 				mIL.Emit(OpCodes.Call, mb);
 
 				// the object on the stack is now the return type. we may need to convert it further

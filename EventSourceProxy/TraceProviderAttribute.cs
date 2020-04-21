@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Specifies a TraceProvider for a class or interface.
@@ -30,6 +22,6 @@ namespace EventSourceProxy
 		/// <summary>
 		/// Gets the type of the provider to assign to the class or interface.
 		/// </summary>
-		public Type ProviderType { get; private set; }
+		public Type ProviderType { get; }
 	}
 }

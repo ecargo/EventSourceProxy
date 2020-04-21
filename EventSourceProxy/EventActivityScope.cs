@@ -5,16 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using EventSourceProxy.Utilities;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Manages the lifetime of an ETW Activity ID.
@@ -195,7 +191,7 @@ namespace EventSourceProxy
 		private static Guid GetActivityId()
 		{
 			// if we have stored a guid, then return that
-			var data = CallContext.LogicalGetData(_slot);
+			var data = AsyncLocalContext.GetData(_slot);
 			if (data != null)
 				return (Guid)data;
 
@@ -213,12 +209,12 @@ namespace EventSourceProxy
 			// never store the empty guid, just convert it to null and revert to the system activity ID
 			if (activityId == Guid.Empty)
 			{
-				CallContext.LogicalSetData(_slot, null);
+				AsyncLocalContext.SetData(_slot, null);
 				UnsafeNativeMethods.SetActivityId(Trace.CorrelationManager.ActivityId);
 			}
 			else
 			{
-				CallContext.LogicalSetData(_slot, activityId);
+				AsyncLocalContext.SetData(_slot, activityId);
 				UnsafeNativeMethods.SetActivityId(activityId);
 			}
 		}

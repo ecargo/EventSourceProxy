@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-#if NUGET
-namespace EventSourceProxy.NuGet
-#else
 namespace EventSourceProxy
-#endif
 {
 	/// <summary>
 	/// Specifies the TraceSerializationProvider to use for a class or interface.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 	public sealed class EventAttributeProviderAttribute : TraceProviderAttribute
 	{
 		/// <summary>

@@ -1,5 +1,4 @@
-﻿using EventSourceProxy.Tests.Properties;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
@@ -53,7 +52,7 @@ namespace EventSourceProxy.Tests
 		public void AbstractClassCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<TestLog>();
-			_listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			// do some logging
 			testLog.Failure("whoops!");
@@ -61,7 +60,7 @@ namespace EventSourceProxy.Tests
 			testLog.Direct("factory direct");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(3, events.Length);
 
 			// check the event source
@@ -113,7 +112,7 @@ namespace EventSourceProxy.Tests
 		public void DerivedAbstractClassCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<TestLogDerived>();
-			_listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			// do some logging
 			testLog.Failure("whoops!");
@@ -121,7 +120,7 @@ namespace EventSourceProxy.Tests
 			testLog.Direct("factory direct");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(3, events.Length);
 
 			// check the event source
@@ -171,13 +170,13 @@ namespace EventSourceProxy.Tests
 		public void AbstractClassWithExternalEnumsCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<TestLogWithExternalEnums>();
-			_listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents(testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			// do some logging
 			testLog.Event("hello, world!");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 
 			// check the event source
@@ -237,14 +236,14 @@ namespace EventSourceProxy.Tests
 		public void InterfaceCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<ITestLog>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			// do some logging
 			testLog.Startup("starting!");
 			testLog.WithReturn("return", 9);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the event source
@@ -289,14 +288,14 @@ namespace EventSourceProxy.Tests
 		public void PlainInterfaceCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IJustAnInterface>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			// do some logging
 			testLog.AddNumbers(2, 3);
 			testLog.SubtractNumbers(4, 5);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the event source
@@ -334,14 +333,14 @@ namespace EventSourceProxy.Tests
 		public void DerivedInterfaceCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IJustAnInterfaceDerived>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			// do some logging
 			testLog.AddNumbers(2, 3);
 			testLog.SubtractNumbers(4, 5);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the event source
@@ -377,14 +376,14 @@ namespace EventSourceProxy.Tests
 		public void DerivedAgainInterfaceCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IJustAnInterfaceDerivedAgain>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			// do some logging
 			testLog.AddNumbers(2, 3);
 			testLog.SubtractNumbers(4, 5);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the event source
@@ -425,14 +424,14 @@ namespace EventSourceProxy.Tests
 		public void InterfaceWithSomeEventIdsCanBeImplemented()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<ITestLogWithIds>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways);
 
 			// do some logging
 			testLog.FirstWithNoId("first");
 			testLog.SecondWithId("second");
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events[0].EventId);
 			Assert.AreEqual(1, events[1].EventId);
 		}
@@ -495,7 +494,7 @@ namespace EventSourceProxy.Tests
 			// this was causing issues with the completed method
 			EventSourceImplementer.RegisterProvider<ITaskService>(new JsonObjectSerializer());
 			var log = EventSourceImplementer.GetEventSourceAs<ITaskService>();
-			_listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
 
 			// check the service
 			var service = new TaskService();
@@ -507,7 +506,7 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual("foo", task.Result);
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(2, events.Length);
 
 			// check the individual events to make sure the task came back in the payload
@@ -534,7 +533,7 @@ namespace EventSourceProxy.Tests
 		{
 			// this was causing issues with the completed method
 			var log = EventSourceImplementer.GetEventSourceAs<IHaveDuplicateNames>();
-			_listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
+			Listener.EnableEvents((EventSource)log, EventLevel.LogAlways);
 
 			log.Get(1);
 			log.Get("s");
@@ -545,7 +544,7 @@ namespace EventSourceProxy.Tests
 			Assert.AreEqual("foo", proxy.Get("foo"));
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(6, events.Length);
 		}
 		#endregion
@@ -759,19 +758,20 @@ namespace EventSourceProxy.Tests
             }
         }
 
-        [Test, Ignore]
+        [Test]
         public void EventSourceThrows()
         {
             var subject = EventSourceImplementer.GetEventSourceAs<IThrowsLog>();
+            var tooBig = new string('a', 67284);
             EnableLogging( subject );
 
             using ( new ExternalTracerContext<IThrowsLog>() )
             {
                 subject.Throw( "Basic text" );
 
-                Assert.Throws<EventSourceException>( () => subject.Throw( Resources.TooBig ) );
+                Assert.Throws<EventSourceException>( () => subject.Throw( tooBig ) );
 
-                Assert.AreEqual( 2, _listener.Events.Count );
+                Assert.AreEqual( 2, Listener.Events.Count );
             }
 		}
 		#endregion
@@ -783,11 +783,12 @@ namespace EventSourceProxy.Tests
 			void Sample(string a, string b);
 		}
 
-		[Test, ExpectedException(typeof(InvalidOperationException))]
+		[Test]
 		public void InvalidMessageThrows()
 		{
 			// this is issue #39 - parameters don't match message format
-			var i = EventSourceImplementer.GetEventSourceAs<IHaveInvalidMessage>();
+			Assert.That(() => EventSourceImplementer.GetEventSourceAs<IHaveInvalidMessage>(),
+				Throws.TypeOf<InvalidOperationException>());
 		}
 
 		public interface IHaveMessageFormatting
@@ -801,12 +802,12 @@ namespace EventSourceProxy.Tests
 		public void TestMessageFormatting()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IHaveMessageFormatting>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			testLog.StartJobManually(new DateTime(2015, 4, 1));
 
 			// look at the events
-			var events = _listener.Events.ToArray();
+			var events = Listener.Events.ToArray();
 			Assert.AreEqual(1, events.Length);
 			Assert.AreEqual("2015-04-01 00:00:00Z", events[0].Payload[0]);
 		}
@@ -841,7 +842,7 @@ namespace EventSourceProxy.Tests
 		public void TestLoggingObjectsWithNoDefaultConstructor()
 		{
 			var testLog = EventSourceImplementer.GetEventSourceAs<IMessageNoDefaultConstructor>();
-			_listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
+			Listener.EnableEvents((EventSource)testLog, EventLevel.LogAlways, (EventKeywords)(-1));
 
 			testLog.Sample(new ClassNoDefaultConstructor(1), new StructNoDefaultConstructor(1));
 		}
