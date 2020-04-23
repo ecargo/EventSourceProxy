@@ -1,21 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<PackageId>EventSourceProxy</PackageId>
-		<Version>4.0.0</Version>
-		<Title>EventSourceProxy</Title>
-		<Authors>Jon Wagner</Authors>
-		<Description>
-			Automatically implements the tedious part of the .NET 4.5 EventSource class.
-			Also automatically converts any interface to an ETW trace point.
-			Wrap your interfaces and get free ETW tracing.
-			** Compatible with System.Diagnostics.Tracing (the one in the .NET Framework) **
-		</Description>
-		<projectUrl>http://github.com/jonwagner/EventSourceProxy</projectUrl>
-		<PackageLicenseUrl>http://opensource.org/licenses/ms-pl.html</PackageLicenseUrl>
-		<PackageTags>EventSource log semantic structured strongly-typed logging ETW tracing event listener block lab LOB slab</PackageTags>
-	</PropertyGroup>
-	
+    <PropertyGroup>
+        <PackageId>EventSourceProxy.NetStandard</PackageId>
+        <Version>1.0.0</Version>
+        <Title>EventSourceProxy</Title>
+        <Authors>Jon Wagner</Authors>
+        <Description>
+            Automatically implements the tedious part of the .NET 4.5 EventSource class.
+            Also automatically converts any interface to an ETW trace point.
+            Wrap your interfaces and get free ETW tracing.
+        </Description>
+        <projectUrl>http://github.com/jonwagner/EventSourceProxy</projectUrl>
+        <PackageLicenseUrl>http://opensource.org/licenses/ms-pl.html</PackageLicenseUrl>
+        <PackageTags>EventSource log semantic structured strongly-typed logging ETW tracing event listener block lab LOB slab</PackageTags>
+    </PropertyGroup>
+
     <PropertyGroup>
         <TargetFrameworks>net472;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
