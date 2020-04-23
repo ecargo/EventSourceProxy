@@ -2,17 +2,45 @@
 
 **EventSourceProxy** (ESP) is the easiest way to add scalable Event Tracing for Windows (ETW) logging to your .NET program.
 
-**Now in NuGet!**
+## Important ##
 
-There are now two versions of ESP:
+This repository is a fork of the Jon Wagner's original source code. It was created primarily to allow this library to
+be consumed by applications targeting .NET Standard 2.1 _or_ .NET Framework 4.7.2.
 
-* EventSourceProxy - works with the .NET Framework - System.Diagnostics.Tracing
-* EventSourceProxy.NuGet - works with the EventSource library in NuGet - Microsoft.Diagnostics.Tracing
+ ### Limitations
 
-[Get EventSourceProxy (ESP) from NuGet](http://nuget.org/packages/EventSourceProxy)
+ To allow this library to be more easily maintained we have dropped support for the manifest generation tool and the NuGet
+ tracing library.
 
+ Note that proxy generation for interfaces with generic parameters is broken and we have no plans to fix this.
+ Feel free to submit a pull request however.
 
-Follow [@jonwagnerdotcom](http://twitter.com/#!jonwagnerdotcom) for latest updates on this library or [code.jonwagner.com](http://code.jonwagner.com) for more detailed writeups.
+### Compatibility
+
+The library _may_ be backwards compatible with earlier versions of the .NET Framework however this is not an aim or priority
+for the maintainers of this repository. We would recommend that if you do not need to target .NET Core that you use the
+original version of the library in the source repository.
+
+The library will not work with earlier versions of .NET Standard because the reflection APIs used to generate proxy
+logging classes are not available in those versions.
+
+ ### Issues
+
+ Please feel free to open an issue in GitHub if you find bugs in the current version of the library.
+
+ However, bear in mind that we maintain this package mainly for our own consumption so we may choose not to fix the
+ issue ourselves if it is not in our direct interests.
+
+ We will accept PRs to add new features or fix existing issues if they are reasonable and accompanied by relevant tests.
+
+### NuGet
+
+The version of the library in this repository is published as `EventSourceProxy.NetStandard`.
+
+To add it to your .NET Core project use:
+```
+dotnet add package EventSourceProxy.NetStandard
+```
 
 ## Why You Want This ##
 
@@ -24,95 +52,105 @@ Follow [@jonwagnerdotcom](http://twitter.com/#!jonwagnerdotcom) for latest updat
 
 Here is ESP implementing a logging interface for you automatically:
 
-	public interface ILog
-	{
-		void SomethingIsStarting(string message);
-		void SomethingIsFinishing(string message);
-	}
+```csharp
+public interface ILog
+{
+    void SomethingIsStarting(string message);
+    void SomethingIsFinishing(string message);
+}
 
-	// yeah, this is it
-	var log = EventSourceImplementer.GetEventSourceAs<ILog>();
+// yeah, this is it
+var log = EventSourceImplementer.GetEventSourceAs<ILog>();
 
-	log.SomethingIsStarting("hello");
-	log.SomethingIsFinishing("goodbye");
+log.SomethingIsStarting("hello");
+log.SomethingIsFinishing("goodbye");
+```
 
 Here is ESP doing the hard work of implementing an EventSource if you really want to do that:
 
-	public abstract MyEventSource : EventSource
-	{
-		public abstract void SomethingIsStarting(string message);
-		public abstract void SomethingIsFinishing(string message);
-	}
+```csharp
+public abstract MyEventSource : EventSource
+{
+    public abstract void SomethingIsStarting(string message);
+    public abstract void SomethingIsFinishing(string message);
+}
 
-	// ESP does the rest
-	var log = EventSourceImplementer.GetEventSourceAs<MyEventSource>();
+// ESP does the rest
+var log = EventSourceImplementer.GetEventSourceAs<MyEventSource>();
+```
 
 Here is ESP wrapping an existing interface for tracing:
 
-	public interface ICalculator
-	{
-		void Clear();
-		int Add(int x, int y);
-		int Multiple(int x, int y);
-	}
+```csharp
+public interface ICalculator
+{
+    void Clear();
+    int Add(int x, int y);
+    int Multiple(int x, int y);
+}
 
-	public class Calculator : ICalculator
-	{
-		// blah blah
-	}
+public class Calculator : ICalculator
+{
+    // blah blah
+}
 
-	Calculator calculator = new Calculator();
+Calculator calculator = new Calculator();
 
-	// again, that's it
-	ICalculator proxy = TracingProxy.CreateWithActivityScope<ICalculator>(calculator);
+// again, that's it
+ICalculator proxy = TracingProxy.CreateWithActivityScope<ICalculator>(calculator);
 
-	// all calls are automatically logged when the ETW source is enabled
-	int total = proxy.Add(1, 2);
+// all calls are automatically logged when the ETW source is enabled
+int total = proxy.Add(1, 2);
+```
 
 And let's say that your interface doesn't look at all like what you want logged. You can add rules to clean all that up:
 
 Say you have the following interface:
 
-	interface IEmailer
-	{
-		void Send(Email email, DateTime when);
-		void Receive(Email email);
-		void Cancel(string from, string to, DateTime earliest, DateTime latest);
-	}
+```csharp
+interface IEmailer
+{
+    void Send(Email email, DateTime when);
+    void Receive(Email email);
+    void Cancel(string from, string to, DateTime earliest, DateTime latest);
+}
 
-	class Email
-	{
-		public string From;
-		public string To;
-		public string Subject;
-		public string Body;
-		public IEnumerable<byte[]> Attachments; 
-	}
+class Email
+{
+    public string From;
+    public string To;
+    public string Subject;
+    public string Body;
+    public IEnumerable<byte[]> Attachments;
+}
+```
 
 Set up rules on how ESP should trace the data to ETW:
 
-	TraceParameterProvider.Default
-		.For<IEmailer>()
-			.With<Email>()
-				.Trace(e => e.From).As("Sender") 
-				.Trace(e => e.To).As("Recipient")
-				.Trace(e => e.Subject).As("s")
- 					.And(e => e.Body).As("b")
-					.TogetherAs("message")
-				.Trace(e => String.Join("/", e.Attachments.Select(Convert.ToBase64String).ToArray()))
-					.As("attachments")
-		.For<IEmailer>(m => m.Send(Any<Email>.Value, Any<DateTime>.Value)
-			.Ignore("when");
-		.ForAnything()
-			.AddContext("user", () => SomeMethodThatChecksIdentity());
+```csharp
+    TraceParameterProvider.Default
+        .For<IEmailer>()
+            .With<Email>()
+                .Trace(e => e.From).As("Sender")
+                .Trace(e => e.To).As("Recipient")
+                .Trace(e => e.Subject).As("s")
+                     .And(e => e.Body).As("b")
+                    .TogetherAs("message")
+                .Trace(e => String.Join("/", e.Attachments.Select(Convert.ToBase64String).ToArray()))
+                    .As("attachments")
+        .For<IEmailer>(m => m.Send(Any<Email>.Value, Any<DateTime>.Value)
+            .Ignore("when");
+        .ForAnything()
+            .AddContext("user", () => SomeMethodThatChecksIdentity());
+```
 
 And now the Send method will log:
 
-	* Sender : From
-	* Recipient : To
-	* Message : { "s":subject, "b":body }
-	* Attachments : [ base64, base64 ]
-	* User : current user
+    * Sender : From
+    * Recipient : To
+    * Message : { "s":subject, "b":body }
+    * Attachments : [ base64, base64 ]
+    * User : current user
 
 So, this is great for adding logging to any interface in your application.
 
