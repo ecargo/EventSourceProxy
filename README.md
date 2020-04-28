@@ -35,11 +35,11 @@ logging classes are not available in those versions.
 
 ### NuGet
 
-The version of the library in this repository is published as `EventSourceProxy.NetStandard`.
+The version of the library in this repository is published as `ECargo.EventSourceProxy.NetStandard`.
 
 To add it to your .NET Core project use:
 ```
-dotnet add package EventSourceProxy.NetStandard
+dotnet add package ECargo.EventSourceProxy.NetStandard
 ```
 
 ## Why You Want This ##
