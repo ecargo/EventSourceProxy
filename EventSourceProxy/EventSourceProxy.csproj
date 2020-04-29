@@ -5,13 +5,10 @@
         <Version>1.0.0</Version>
 
         <Authors>eCargo based on Jon Wagner</Authors>
-        <Description>
-            Modified to take a multi-targeting approach so that it can be consumed from either
-            .NET Standard 2.1 or by .NET Framework 4.7.2 or above.
-            Automatically implements the tedious part of the .NET 4.5 EventSource class.
-            Also automatically converts any interface to an ETW trace point.
-            Wrap your interfaces and get free ETW tracing.
-        </Description>
+        <Description>Modified to take a multi-targeting approach so that it can be consumed from either .NET Standard 2.1 or by .NET Framework 4.7.2 or above.
+Automatically implements the tedious part of the .NET 4.5 EventSource class.
+Also automatically converts any interface to an ETW trace point.
+Wrap your interfaces and get free ETW tracing.</Description>
         <projectUrl>http://github.com/jonwagner/EventSourceProxy</projectUrl>
         <PackageTags>EventSource log semantic structured strongly-typed logging ETW tracing event listener block lab LOB slab</PackageTags>
         <RepositoryUrl>https://github.com/ecargo/EventSourceProxy</RepositoryUrl>
