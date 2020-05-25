@@ -1,46 +1,48 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using NUnit.Framework;
 
 namespace EventSourceProxy.Tests
 {
-	[TestFixture]
-	public class EventDataTypesTests
-	{
-		#region Tests for Built-in Types
-		public enum FooEnum
-		{
-			Foo,
-			Bar
-		}
+    [TestFixture]
+    public class EventDataTypesTests
+    {
+        #region Tests for Built-in Types
 
-		public interface ITypeLog<T>
-		{
-			void Log(T t);
-		}
+        public enum FooEnum
+        {
+            Foo,
+            Bar
+        }
 
-		public static class TypeLogTester<T>
-		{
-			public static void Test(T t)
-			{
-				using (var testLog = (EventSource)EventSourceImplementer.GetEventSourceAs<ITypeLog<T>>())
-				using (var listener = new TestEventListener())
-				{
-					listener.EnableEvents(testLog, EventLevel.LogAlways);
+        public interface ITypeLog<T>
+        {
+            void Log(T t);
+        }
 
-					var tLog = (ITypeLog<T>)testLog;
-					tLog.Log(t);
+        public static class TypeLogTester<T>
+        {
+            public static void Test(T t)
+            {
+                using (var testLog = (EventSource) EventSourceImplementer.GetEventSourceAs<ITypeLog<T>>())
+                using (var listener = new TestEventListener())
+                {
+                    listener.EnableEvents(testLog, EventLevel.LogAlways);
 
-					var value = listener.Events.Last().Payload[0];
-					if (TypeIsSupportedByEventSource(typeof(T)))
-						Assert.AreEqual(t, value);
-					else
-						Assert.AreEqual(t.ToString(), value);
+                    var tLog = (ITypeLog<T>) testLog;
+                    tLog.Log(t);
 
-					listener.DisableEvents(testLog);
-				}
-			}
+                    var value = listener.Events.Last().Payload[0];
+                    if (TypeIsSupportedByEventSource(typeof(T)))
+                        Assert.AreEqual(t, value);
+                    else
+                        Assert.AreEqual(t.ToString(), value);
+
+                    listener.DisableEvents(testLog);
+                }
+            }
 
             internal static bool TypeIsSupportedByEventSource(Type type)
             {
@@ -60,102 +62,89 @@ namespace EventSourceProxy.Tests
 
                 return false;
             }
-		}
+        }
 
-		[Test]
-		public void BuiltInTypesCanBeLogged()
-		{
-			TypeLogTester<string>.Test("string");
-			TypeLogTester<int>.Test(5);
-			TypeLogTester<long>.Test(0x800000000);
-			TypeLogTester<ulong>.Test(0x1800000000);
-			TypeLogTester<byte>.Test(0x78);
-			TypeLogTester<sbyte>.Test(0x20);
-			TypeLogTester<short>.Test(0x1001);
-			TypeLogTester<ushort>.Test(0x8010);
-			TypeLogTester<float>.Test(1.234f);
-			TypeLogTester<double>.Test(2.3456);
-			TypeLogTester<bool>.Test(true);
-			TypeLogTester<Guid>.Test(Guid.NewGuid());
-			TypeLogTester<FooEnum>.Test(FooEnum.Bar);
-			TypeLogTester<IntPtr>.Test(new IntPtr(1234));
-			TypeLogTester<char>.Test('c');
-			TypeLogTester<decimal>.Test(3.456m);
+        static IEnumerable<TestCaseData> GetSupportedTypeTestCases()
+        {
+            yield return new TestCaseData(new Action(() => TypeLogTester<string>.Test("string")));
+            yield return new TestCaseData(new Action(() => TypeLogTester<int>.Test(5)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<long>.Test(0x800000000)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<ulong>.Test(0x1800000000)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<byte>.Test(0x78)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<sbyte>.Test(0x20)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<short>.Test(0x1001)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<ushort>.Test(0x8010)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<float>.Test(1.234f)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<double>.Test(2.3456)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<bool>.Test(true)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<Guid>.Test(Guid.NewGuid())));
+            yield return new TestCaseData(new Action(() => TypeLogTester<FooEnum>.Test(FooEnum.Bar)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<char>.Test('c')));
+            yield return new TestCaseData(new Action(() => TypeLogTester<decimal>.Test(3.456m)));
+            yield return new TestCaseData(new Action(() => TypeLogTester<IntPtr>.Test(new IntPtr(1234))));
+            yield return new TestCaseData(new Action(() => TypeLogTester<DateTime>.Test(DateTime.Now)));
+        }
 
-			TypeLogTester<int?>.Test(5);
-			TypeLogTester<long?>.Test(0x800000000);
-			TypeLogTester<ulong?>.Test(0x1800000000);
-			TypeLogTester<byte?>.Test(0x78);
-			TypeLogTester<sbyte?>.Test(0x20);
-			TypeLogTester<short?>.Test(0x1001);
-			TypeLogTester<ushort?>.Test(0x8010);
-			TypeLogTester<float?>.Test(1.234f);
-			TypeLogTester<double?>.Test(2.3456);
-			TypeLogTester<bool?>.Test(true);
-			TypeLogTester<Guid?>.Test(Guid.NewGuid());
-			TypeLogTester<FooEnum?>.Test(FooEnum.Bar);
-			TypeLogTester<IntPtr?>.Test(new IntPtr(1234));
-			TypeLogTester<char?>.Test('c');
-			TypeLogTester<decimal?>.Test(3.456m);
+        [TestCaseSource(nameof(GetSupportedTypeTestCases))]
+        public void When_logging_supported_types_Then_the_value_is_logged_successfully(Action act)
+        {
+            Assert.DoesNotThrow(() => act());
+        }
 
-			TypeLogTester<int?>.Test(null);
-			TypeLogTester<long?>.Test(null);
-			TypeLogTester<ulong?>.Test(null);
-			TypeLogTester<byte?>.Test(null);
-			TypeLogTester<sbyte?>.Test(null);
-			TypeLogTester<short?>.Test(null);
-			TypeLogTester<ushort?>.Test(null);
-			TypeLogTester<float?>.Test(null);
-			TypeLogTester<double?>.Test(null);
-			TypeLogTester<bool?>.Test(null);
-			TypeLogTester<Guid?>.Test(null);
-			TypeLogTester<FooEnum?>.Test(null);
-			TypeLogTester<IntPtr?>.Test(null);
-			TypeLogTester<char?>.Test(null);
-			TypeLogTester<decimal?>.Test(null);
-		}
-		#endregion
+        static IEnumerable<TestCaseData> GetUnsupportedTypeTestCases()
+        {
+            yield return new TestCaseData(new Action(() =>TypeLogTester<int?>.Test(5)));
+            yield return new TestCaseData(new Action(() =>TypeLogTester<int?>.Test(null)));
+        }
 
-		#region Serialized Types in Abstract Methods Tests
-		public abstract class TypeLogWithSerializedTypesInAbstractMethod : EventSource
-		{
-			public abstract void LogIntPtr(IntPtr p);
-			public abstract void LogChar(char c);
-			public abstract void LogDecimal(decimal d);
-		}
+        [TestCaseSource(nameof(GetUnsupportedTypeTestCases))]
+        public void When_logging_unsupported_types_Then_a_NotSupportedException_is_thrown(Action act)
+        {
+            Assert.Throws<NotSupportedException>(() => act());
+        }
 
-		[Test]
-		public void BuiltInSerializedTypesCanBeLoggedInAbstractMethods()
-		{
-			var listener = new TestEventListener();
-			var testLog = EventSourceImplementer.GetEventSourceAs<TypeLogWithSerializedTypesInAbstractMethod>();
-			listener.EnableEvents(testLog, EventLevel.LogAlways);
+        #endregion
 
-			testLog.LogIntPtr(new IntPtr(1234)); Assert.AreEqual("1234", listener.Events.Last().Payload[0].ToString());
-			testLog.LogChar('c'); Assert.AreEqual("c", listener.Events.Last().Payload[0].ToString());
-			testLog.LogDecimal(3.456m); Assert.AreEqual("3.456", listener.Events.Last().Payload[0].ToString());
-		}
-		#endregion
+        #region Serialized Types in Abstract Methods Tests
+        public abstract class TypeLogWithSerializedTypesInAbstractMethod : EventSource
+        {
+            public abstract void LogIntPtr(IntPtr p);
+            public abstract void LogChar(char c);
+            public abstract void LogDecimal(decimal d);
+        }
 
-		#region Serialized Types in Direct Methods Tests
-		public class TypeLogWithSerializedTypesInDirectMethod : EventSource
-		{
-			public void LogIntPtr(IntPtr p) { WriteEvent(1, p); }
-			public void LogChar(char c) { WriteEvent(2, c); }
-			public void LogDecimal(decimal d) { WriteEvent(3, d); }
-		}
+        [Test]
+        public void BuiltInSerializedTypesCanBeLoggedInAbstractMethods()
+        {
+            var listener = new TestEventListener();
+            var testLog = EventSourceImplementer.GetEventSourceAs<TypeLogWithSerializedTypesInAbstractMethod>();
+            listener.EnableEvents(testLog, EventLevel.LogAlways);
 
-		[Test]
-		public void BuiltInSerializedTypesCanBeLoggedInDirectMethods()
-		{
-			var listener = new TestEventListener();
-			var testLog = EventSourceImplementer.GetEventSourceAs<TypeLogWithSerializedTypesInDirectMethod>();
-			listener.EnableEvents(testLog, EventLevel.LogAlways);
+            testLog.LogIntPtr(new IntPtr(1234)); Assert.AreEqual("1234", listener.Events.Last().Payload[0].ToString());
+            testLog.LogChar('c'); Assert.AreEqual("c", listener.Events.Last().Payload[0].ToString());
+            testLog.LogDecimal(3.456m); Assert.AreEqual("3.456", listener.Events.Last().Payload[0].ToString());
+        }
+        #endregion
 
-			testLog.LogIntPtr(new IntPtr(1234)); Assert.AreEqual("1234", listener.Events.Last().Payload[0].ToString());
-			testLog.LogChar('c'); Assert.AreEqual("c", listener.Events.Last().Payload[0].ToString());
-			testLog.LogDecimal(3.456m); Assert.AreEqual("3.456", listener.Events.Last().Payload[0].ToString());
-		}
-		#endregion
-	}
+        #region Serialized Types in Direct Methods Tests
+        public class TypeLogWithSerializedTypesInDirectMethod : EventSource
+        {
+            public void LogIntPtr(IntPtr p) { WriteEvent(1, p); }
+            public void LogChar(char c) { WriteEvent(2, c); }
+            public void LogDecimal(decimal d) { WriteEvent(3, d); }
+        }
+
+        [Test]
+        public void BuiltInSerializedTypesCanBeLoggedInDirectMethods()
+        {
+            var listener = new TestEventListener();
+            var testLog = EventSourceImplementer.GetEventSourceAs<TypeLogWithSerializedTypesInDirectMethod>();
+            listener.EnableEvents(testLog, EventLevel.LogAlways);
+
+            testLog.LogIntPtr(new IntPtr(1234)); Assert.AreEqual("1234", listener.Events.Last().Payload[0].ToString());
+            testLog.LogChar('c'); Assert.AreEqual("c", listener.Events.Last().Payload[0].ToString());
+            testLog.LogDecimal(3.456m); Assert.AreEqual("3.456", listener.Events.Last().Payload[0].ToString());
+        }
+        #endregion
+    }
 }
