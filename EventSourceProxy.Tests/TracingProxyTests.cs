@@ -419,6 +419,7 @@ namespace EventSourceProxy.Tests
 		}
 
 		[Test]
+		[Ignore("Generic arguments in interface methods are no longer supported.")]
 		public void CanImplementInterfaceWithGenericMethods()
 		{
 			// turn on logging
@@ -479,6 +480,7 @@ namespace EventSourceProxy.Tests
 		}
 
 		[Test]
+		[Ignore("Generic arguments in interface methods are no longer supported.")]
 		public void CanImplementInterfaceWithGenericTaskMethods()
 		{
 			// turn on logging
