@@ -364,6 +364,8 @@ namespace EventSourceProxy
         }
         #endregion
 
+        static bool IsTypeSerializable(Type type) => Nullable.GetUnderlyingType(type) == null;
+
         #region Method Implementation
         /// <summary>
         /// Emits an implementation of a given method.
@@ -377,6 +379,17 @@ namespace EventSourceProxy
             // get the method we are implementing and the parameter mapping
             var interfaceMethod = invocationContext.MethodInfo;
             var parameterMapping = _traceParameterProvider.ProvideParameterMapping(invocationContext.MethodInfo).Where(p => p.HasSource).ToList();
+
+            var unsupportedParameterMappings = parameterMapping
+                .Where(p => !IsTypeSerializable(p.TargetType))
+                .ToArray();
+
+            if (unsupportedParameterMappings.Any())
+            {
+                var message = string.Join(Environment.NewLine,
+                    unsupportedParameterMappings.Select(p => $"The type '{p.TargetType.Name}' for parameter '{p.Name}' cannot be serialized. Convert the value to a supported type first."));
+                throw new NotSupportedException(message);
+            }
 
             // if we are implementing an interface, then add an string context parameter
             if (SupportsContext(invocationContext))
